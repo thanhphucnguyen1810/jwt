@@ -1,0 +1,8 @@
+// Author: thanhphuc1810
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./src/*"],
+    },
+  }
+}

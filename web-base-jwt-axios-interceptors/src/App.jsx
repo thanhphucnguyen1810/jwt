@@ -1,4 +1,4 @@
-// Author: TrungQuanDev: https://youtube.com/@trungquandev
+// Author: thanhphuc1810
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Login from '~/pages/Login'
 import Dashboard from '~/pages/Dashboard'

@@ -1,4 +1,4 @@
-// Author: TrungQuanDev: https://youtube.com/@trungquandev
+// Author: thanhphuc1810
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import CssBaseline from '@mui/material/CssBaseline'

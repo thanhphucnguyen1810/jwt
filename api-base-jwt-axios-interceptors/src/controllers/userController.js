@@ -10,9 +10,9 @@ import { JwtProvider } from '~/providers/JwtProvider'
  */
 const MOCK_DATABASE = {
   USER: {
-    ID: 'trungquandev-sample-id-12345678',
-    EMAIL: 'trungquandev.official@gmail.com',
-    PASSWORD: 'trungquandev@123'
+    ID: 'thanhphuc1810-sample-id-12345678',
+    EMAIL: 'thanhphuc1810.work@gmail.com',
+    PASSWORD: 'thanhphuc@123'
   }
 }
 

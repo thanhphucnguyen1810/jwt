@@ -1,6 +1,7 @@
 // Author: thanhphuc1810
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { handleLogoutAPI, refreshTokenAPI } from '~/apis'
 
 let authorizedAxiosInstance = axios.create()
 
@@ -36,7 +37,51 @@ authorizedAxiosInstance.interceptors.response.use((response) => {
   return response
 }, (error) => {
   // Do something with response error
-  if (error.response.status !== 410) {
+
+  // Xử lý refreshToken tự động
+  // Nếu nhận 401 từ BE thì gọi API logout
+  if (error.response?.status === 401) {
+    handleLogoutAPI.then(() => {
+      // nều dùng cookie nhớ xóa userInfo trong localStrorage
+      // localStorage.removeItem('userInfo')
+      location.href = '/login'
+    })
+  }
+
+  // Nếu nhận 410 thì gọi tạo lại refreshToken
+  // Đầu tiên lấy lại các request API bị lỗi thông qua error.config
+  const originalRequest = error.config
+
+  if (error.response?.status === 410 && !originalRequest._retry) {
+    // Gán thêm một giá trị retry luôn = true trong thời gian chờ, để refreshToken chỉ gọi một lần tại một thời điểm
+    originalRequest._retry = true
+
+    // Lấy refreshToken từ localStorage (cho TH localStorage)
+    const refreshToken = localStorage.getItem('refreshToken')
+    // Gọi API refreshToken
+    return refreshTokenAPI(refreshToken)
+      .then((res) => {
+        // Lấy và gán lại ac vào localStorage
+        const { accessToken } = res.data
+        localStorage.setItem('accessToken', accessToken)
+        authorizedAxiosInstance.defaults.headers.Authorization = `Bearer ${accessToken}`
+
+        // Đồng thời lưu ý ac cũng đã được update lại ở cookie
+        //Return lại axios instance của ta kết hợp vs originalRequest để gọi lại những api ban đầu bị lỗi
+        return authorizedAxiosInstance(originalRequest)
+      })
+      .catch((_error) => {
+        // Nếu nhận bất kỳ lỗi nào từ api refreshToken thì logout
+        handleLogoutAPI.then(() => {
+          location.href = '/login'
+        })
+
+        return Promise.reject(_error)
+      })
+  }
+
+
+  if (error.response?.status !== 410) {
     toast.error(error.response?.data?.message || error?.message)
   }
   return Promise.reject(error)

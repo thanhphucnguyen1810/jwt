@@ -9,6 +9,7 @@ import authorizedAxiosInstance from '~/utils/authorizedAxios'
 import { API_ROOT } from '~/utils/constants'
 import { Button } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { handleLogoutAPI } from '~/apis'
 
 function Dashboard() {
   const [user, setUser] = useState(null)
@@ -25,14 +26,9 @@ function Dashboard() {
   }, [])
 
   const handleLogout = async () => {
-    // Với TH1: localStorage --> chỉ xóa thông tin trong localStorage FE
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('userInfo')
+    await handleLogoutAPI()
 
-    // Với TH2: HttpOnlyCookies --> Gọi API để xử lý remove Cookies
-    await authorizedAxiosInstance.delete(`${API_ROOT}/v1/users/logout`)
-    setUser(null)
+    // localStorage.removeItem('userInfo')
 
     // Điều hướng đến Login
     navigate('/login')

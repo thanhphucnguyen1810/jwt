@@ -43,6 +43,7 @@ const login = async (req, res) => {
     const accessToken = await JwtProvider.generateToken(
       userInfo,
       ACCESS_TOKEN_SECRET_SIGNATURE,
+      // 5
       '1h'
     )
 
@@ -113,6 +114,7 @@ const refreshToken = async (req, res) => {
     const accessToken = await JwtProvider.generateToken(
       userInfo,
       ACCESS_TOKEN_SECRET_SIGNATURE,
+      // 5
       '1h'
     )
 
